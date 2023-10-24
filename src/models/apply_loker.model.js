@@ -1,17 +1,23 @@
-module.exports = (sequelize, Sequlize) => {
-    const ApplyLoker = sequelize.define('apply_loker', {
+const { DataTypes } = require("sequelize");
+
+module.exports = (sequelize, Sequelize) => {
+    const ApplyLoker = sequelize.define("apply_loker", {
         idapply: {
-            type: Sequlize.STRING,
-            defaultValue: Sequlize.UUIDv4,
-            primaryKey: true
+            type: DataTypes.UUID,
+            defaultValue: DataTypes.UUIDV4,
+            allowNull: false,
+            primaryKey: true,
+        },
+        idloker: {
+            type: DataTypes.UUID,
         },
         no_ktp: {
-            type: Sequlize.STRING
+            type: DataTypes.STRING,
         },
         tgl_apply: {
-            type: Sequlize.DATE
+            type: DataTypes.DATEONLY,
         },
-    })
+    });
 
-    return ApplyLoker
-}
+    return ApplyLoker;
+};

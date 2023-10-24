@@ -1,12 +1,18 @@
-module.exports = (sequelize, Sequlize) => {
-    const tahapanApply = sequelize.define('tahapan_apply', {
+const { DataTypes } = require("sequelize");
+
+module.exports = (sequelize, Sequelize) => {
+    const tahapanApply = sequelize.define("tahapan_apply", {
+        idtahapan: {
+            type: DataTypes.INTEGER,
+            defaultValue: 1
+        },
         nilai: {
-            type: Sequlize.INTEGER
+            type: DataTypes.INTEGER,
         },
         tgl_update: {
-            type: Sequlize.DATE
-        }
-    })
+            type: DataTypes.DATEONLY,
+        },
+    });
 
-    return tahapanApply
-}
+    return tahapanApply;
+};

@@ -9,6 +9,7 @@ const sequelize = new Sequelize(
     {
         host: config.HOST,
         dialect: config.dialect,
+        port: config.port,
         pool: {
             max: config.pool.max,
             min: config.pool.min,
@@ -29,6 +30,11 @@ db.tahapan = require('./tahapan.model')(sequelize, Sequelize)
 db.tahapan_apply = require('./tahapan_apply.model')(sequelize, Sequelize)
 db.loker = require('./loker.model')(sequelize, Sequelize)
 db.apply_loker = require('./apply_loker.model')(sequelize, Sequelize)
+db.master_status = require('./master_status.model')(sequelize, Sequelize)
+
+db.loker.hasMany(db.apply_loker, {
+    foreignKey: 'idloker',
+})
 
 db.apply_loker.belongsTo(db.pencaker,{
     foreignKey: 'no_ktp',
@@ -45,5 +51,15 @@ db.tahapan_apply.belongsTo(db.apply_loker, {
 db.tahapan_apply.belongsTo(db.tahapan, {
     foreignKey: 'idtahapan',
 })
+
+db.loker.belongsTo(db.master_status, {
+    foreignKey: 'status',
+})
+
+
+
+// db.master_status.hasMany(db.loker, {
+//     foreignKey: 'idstatus',
+// })
 
 module.exports = db

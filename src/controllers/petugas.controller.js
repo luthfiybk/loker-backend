@@ -1,29 +1,16 @@
 const db = require('../models')
 const Petugas = db.petugas
-const Op = db.Sequelize.Op
 const Loker = db.loker
-
-exports.isPetugas = (req, res) => {
-    res.status(200).send('Petugas Content')
-}
-
-exports.getLoker = (req, res) => {
-    const nama = req.body.nama
-    const condition = nama ? { nama: { [Op.like]: `%&{nama}%` } } : null
-
-    Loker.findAll({ where: condition})
-    .then(data => {
-        res.send(data)
-    })
-    .catch(err => {
-        res.status(500).send({
-            message: err.message || "Error getting data"
-        })
-    })
-}
+const ApplyLoker = db.apply_loker
+const Op = db.Sequelize.Op
+const { v4: uuidv4 } = require('uuid')
+const sequelize = db.sequelize
+const tahapanApply = db.tahapan_apply
+const Tahapan = db.tahapan
+const Pencaker = db.pencaker
 
 exports.createLoker = (req, res) => {
-    if(!req.body.idperusahaan || !req.body.nama || !req.body.tipe || !req.body.usia_min || !req.body.usia_max || !req.body.gaji_min || !req.body.gaji_max || !req.body.nama_cp || !req.body.no_telp_cp || !req.body.tgl_update || !req.body.tgl_aktif || !req.body.tgl_tutup || !req.body.status){
+    if(!req.body.idperusahaan || !req.body.nama || !req.body.tipe || !req.body.usia_min || !req.body.usia_max || !req.body.gaji_min || !req.body.gaji_max || !req.body.nama_cp || !req.body.no_telp_cp || !req.body.deskripsi){
         res.status(400).send({
             message: 'Content can not be empty!'
         })
@@ -31,24 +18,25 @@ exports.createLoker = (req, res) => {
     }
 
     const loker = {
+        idloker: uuidv4(),
         idperusahaan: req.body.idperusahaan,
         nama: req.body.nama,
         tipe: req.body.tipe,
+        deskripsi: req.body.deskripsi,
         usia_min: req.body.usia_min,
         usia_max: req.body.usia_max,
         gaji_min: req.body.gaji_min,
         gaji_max: req.body.gaji_max,
         nama_cp: req.body.nama_cp,
         no_telp_cp: req.body.no_telp_cp,
-        tgl_update: req.body.tgl_update,
-        tgl_aktif: req.body.tgl_aktif,
-        tgl_tutup: req.body.tgl_tutup,
-        status: req.body.status
+        tgl_update: new Date(),
+        tgl_aktif: new Date(),
+        tgl_tutup: null,
     }
     
     Loker.create(loker)
     .then(data => {
-        res.send(data)
+        res.status(201).send(data)
     })
     .catch(err => {
         res.status(500).send({
@@ -58,7 +46,7 @@ exports.createLoker = (req, res) => {
 }
 
 exports.editLoker = (req, res) => {
-    idloker = req.params.idloker
+    const idloker = req.params.idloker
 
     Loker.update(req.body, {
         where: {idloker: idloker}
@@ -82,7 +70,7 @@ exports.editLoker = (req, res) => {
 }
 
 exports.deleteLoker = (req, res) => {
-    idloker = req.params.idloker
+    const idloker = req.params.idloker
 
     Loker.destroy({
         where: {idloker: idloker}
@@ -101,6 +89,44 @@ exports.deleteLoker = (req, res) => {
     .catch(err => {
         res.status(500).send({
             message: "Cannot delete loker with id=" + idloker
+        })
+    })
+}
+
+exports.getPencakerFromLoker = (req, res) => {
+    const idloker = req.params.idloker
+
+    Loker.findByPk(idloker, {
+        attributes: ['apply_lokers.idloker', 'pencakers.nama', 'apply_lokers.tgl_apply', 'tahapans.nama'],
+        include: [
+            {
+                model: ApplyLoker,
+                as: 'apply_lokers',
+                include: [
+                    {
+                        model: Pencaker,
+                        as: 'pencakers'
+                    },
+                    {
+                        model: tahapanApply,
+                        as: 'tahapan_applies',
+                        include: [
+                        {
+                            model: Tahapan,
+                            as: 'tahapans'
+                        }
+                        ]
+                    }
+                ]
+            }
+        ]
+    })
+    .then(data => {
+        res.status(200).send(data)
+    })
+    .catch(err => {
+        res.status(500).send({
+            message: 'Error getting data with idloker=' + idloker
         })
     })
 }

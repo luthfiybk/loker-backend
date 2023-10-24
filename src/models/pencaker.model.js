@@ -1,45 +1,47 @@
+const { DataTypes } = require('sequelize')
+
 module.exports = (sequelize, Sequelize) => {
     const Pencaker = sequelize.define('pencaker', {
         no_ktp:{
-            type: Sequelize.STRING,
+            type: DataTypes.STRING,
             primaryKey: true
         },
         nama: { 
-            type: Sequelize.STRING 
+            type: DataTypes.STRING 
         },
         password: { 
-            type: Sequelize.STRING 
+            type: DataTypes.STRING 
         },
         jenis_kelamin: {
-            type: Sequelize.STRING
+            type: DataTypes.STRING
         },
         tempat_lahir: {
-            type: Sequelize.STRING
+            type: DataTypes.STRING
         },
         tanggal_lahir: {
-            type: Sequelize.DATE
+            type: DataTypes.DATEONLY
         },
         alamat: {
-            type: Sequelize.STRING
+            type: DataTypes.STRING
         },
         kota: {
-            type: Sequelize.STRING
+            type: DataTypes.STRING
         },
         email: {
-            type: Sequelize.STRING,
+            type: DataTypes.STRING,
             unique: true
         },
         no_telp: {
-            type: Sequelize.STRING
+            type: DataTypes.STRING
         },
         foto: {
-            type: Sequelize.STRING
+            type: DataTypes.STRING
         },
         tgl_daftar: {
-            type: Sequelize.DATE
+            type: DataTypes.DATEONLY
         },
         file_ktp: {
-            type: Sequelize.STRING
+            type: DataTypes.STRING
         }
     })
 

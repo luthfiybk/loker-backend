@@ -4,7 +4,7 @@ const db = require("../models")
 const Pencaker = db.pencaker
 const Petugas = db.petugas
 
-verifyToken = (req, res, next) => {
+const verifyToken = (req, res, next) => {
     let token = req.session.token
 
     if(!token) {
@@ -22,7 +22,7 @@ verifyToken = (req, res, next) => {
     })
 }
 
-isPencaker = (req, res, next) => {
+const isPencaker = (req, res, next) => {
     Pencaker.findByPk(req.session.no_ktp).then(pencaker => {
         if(pencaker) {
             next()
@@ -34,7 +34,7 @@ isPencaker = (req, res, next) => {
     })
 }
 
-isPetugas = (req, res, next) => {
+const isPetugas = (req, res, next) => {
     Petugas.findByPk(req.session.idpetugas).then(petugas => {
         if(petugas) {
             next()
@@ -46,6 +46,6 @@ isPetugas = (req, res, next) => {
     })
 }
 
-const authJwt = { verifyToken, isPencaker, isPetugas }
+const authJwt = { verifyToken: verifyToken, isPencaker: isPencaker, isPetugas: isPetugas }
 
 module.exports = authJwt

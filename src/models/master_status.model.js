@@ -1,15 +1,15 @@
-const { DataTypes } = require("sequelize");
+const { DataTypes } = require("sequelize")
 
 module.exports = (sequelize, Sequelize) => {
-    const Tahapan = sequelize.define("tahapan", {
-        idtahapan: {
+    const Status = sequelize.define("master_status", {
+        idstatus: {
             type: DataTypes.INTEGER,
             primaryKey: true,
         },
         nama: {
             type: DataTypes.STRING,
         },
-    });
+    })
 
-    return Tahapan;
-};
+    return Status
+}

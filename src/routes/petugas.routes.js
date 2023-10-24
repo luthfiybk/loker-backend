@@ -1,5 +1,8 @@
 const { authJwt } = require('../middleware')
-const controller = require('../controllers/petugas.controller')
+const petugasController = require('../controllers/petugas.controller')
+const lokerController = require('../controllers/loker.controller')
+// const http = require('http')
+const router = require('express').Router()
 
 module.exports = function(app) {
     // app.use(function(req, res, next) {
@@ -9,22 +12,32 @@ module.exports = function(app) {
     // })
 
     app.get(
-        '/api/petugas/dashboard',
+        '/api/petugas/loker',
         [authJwt.verifyToken, authJwt.isPetugas],
-        controller.getLoker
+        lokerController.getAll
+    )
+
+    app.get(
+        '/api/petugas/loker/:idloker',
+        [authJwt.verifyToken, authJwt.isPetugas],
+        lokerController.getOne
     )
 
     app.post(
-        'api/petugas/loker/new',
+        '/api/petugas/loker',
         [authJwt.verifyToken, authJwt.isPetugas],
-        controller.createLoker
+        petugasController.createLoker
     )
 
     app.delete(
-        'api/petugas/loker/:id',
+        '/api/petugas/loker/:idloker',
         [authJwt.verifyToken, authJwt.isPetugas],
-        controller.editLoker
+        petugasController.editLoker
     )
 
-    app.post
+    app.get(
+        '/api/petugas/loker/:idloker/apply',
+        [authJwt.verifyToken, authJwt.isPetugas],
+        petugasController.getPencakerFromLoker
+    )
 }

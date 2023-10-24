@@ -1,51 +1,64 @@
-module.exports = (sequelize, Sequlize) => {
-    const Loker = sequelize.define('loker', {
+const { DataTypes } = require("sequelize");
+
+module.exports = (sequelize, Sequelize) => {
+    const Loker = sequelize.define("loker", {
         idloker: {
-            type: Sequlize.STRING,
-            defaultValue: Sequlize.UUIDv4,
-            primaryKey: true
+            type: DataTypes.UUID,
+            defaultValue: DataTypes.UUIDV4,
+            allowNull: false,
+            validate:{
+                notEmpty: true
+            },
+            primaryKey: true,
         },
         idperusahaan: {
-            type: Sequlize.STRING,
-            defaultValue: Sequlize.UUIDv4
+            type: DataTypes.STRING,
         },
         nama: {
-            type: Sequlize.STRING
+            type: DataTypes.STRING,
         },
         tipe: {
-            type: Sequlize.STRING
+            type: DataTypes.STRING,
+        },
+        deskripsi: {
+            type: DataTypes.STRING,
         },
         usia_min: {
-            type: Sequlize.INTEGER
+            type: DataTypes.INTEGER,
         },
         usia_max: {
-            type: Sequlize.INTEGER
+            type: DataTypes.INTEGER,
         },
         gaji_min: {
-            type: Sequlize.INTEGER
+            type: DataTypes.FLOAT,
         },
         gaji_max: {
-            type: Sequlize.INTEGER
+            type: DataTypes.FLOAT,
         },
         nama_cp: {
-            type: Sequlize.STRING
+            type: DataTypes.STRING,
         },
         no_telp_cp: {
-            type: Sequlize.STRING
+            type: DataTypes.STRING,
         },
         tgl_update: {
-            type: Sequlize.DATE
+            type: DataTypes.DATEONLY,
+            defaultValue: DataTypes.NOW,
         },
         tgl_aktif: {
-            type: Sequlize.DATE
+            type: DataTypes.DATEONLY,
+            defaultValue: DataTypes.NOW,
         },
         tgl_tutup: {
-            type: Sequlize.DATE
+            type: DataTypes.DATEONLY,
+            allowNull: true,
+            defaultValue: null,
         },
         status: {
-            type: Sequlize.INTEGER
-        }
-    })
+            type: DataTypes.INTEGER,
+            defaultValue: 1
+        },
+    });
 
-    return Loker
-}
+    return Loker;
+};
