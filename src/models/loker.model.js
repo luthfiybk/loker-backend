@@ -43,7 +43,7 @@ module.exports = (sequelize, Sequlize) => {
             type: Sequlize.DATE
         },
         status: {
-            type: Sequlize.STRING
+            type: Sequlize.INTEGER
         }
     })
 

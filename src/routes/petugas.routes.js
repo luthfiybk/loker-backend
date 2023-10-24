@@ -11,6 +11,20 @@ module.exports = function(app) {
     app.get(
         '/api/petugas/dashboard',
         [authJwt.verifyToken, authJwt.isPetugas],
-        controller.isPetugas
+        controller.getLoker
     )
+
+    app.post(
+        'api/petugas/loker/new',
+        [authJwt.verifyToken, authJwt.isPetugas],
+        controller.createLoker
+    )
+
+    app.delete(
+        'api/petugas/loker/:id',
+        [authJwt.verifyToken, authJwt.isPetugas],
+        controller.editLoker
+    )
+
+    app.post
 }
