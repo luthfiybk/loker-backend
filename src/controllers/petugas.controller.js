@@ -6,7 +6,6 @@ const Op = db.Sequelize.Op
 const { v4: uuidv4 } = require('uuid')
 const sequelize = db.sequelize
 const tahapanApply = db.tahapan_apply
-const Tahapan = db.tahapan
 const Pencaker = db.pencaker
 
 exports.createLoker = (req, res) => {
@@ -93,40 +92,89 @@ exports.deleteLoker = (req, res) => {
     })
 }
 
-exports.getPencakerFromLoker = (req, res) => {
+exports.getPencakerFromLoker = async (req, res) => {
     const idloker = req.params.idloker
 
-    Loker.findByPk(idloker, {
-        attributes: ['apply_lokers.idloker', 'pencakers.nama', 'apply_lokers.tgl_apply', 'tahapans.nama'],
-        include: [
-            {
-                model: ApplyLoker,
-                as: 'apply_lokers',
-                include: [
-                    {
-                        model: Pencaker,
-                        as: 'pencakers'
-                    },
-                    {
-                        model: tahapanApply,
-                        as: 'tahapan_applies',
-                        include: [
-                        {
-                            model: Tahapan,
-                            as: 'tahapans'
-                        }
-                        ]
-                    }
-                ]
-            }
-        ]
-    })
-    .then(data => {
+    const query = 'select apply_lokers.idapply, pencakers.nama as nama_pekerjaan, apply_lokers.tgl_apply as tanggal_apply, tahapans.nama as tahapan from tahapan_applies left join tahapans on tahapan_applies.idtahapan = tahapans.idtahapan left join apply_lokers on apply_lokers.idapply = tahapan_applies.idapply left join pencakers on apply_lokers.no_ktp = pencakers.no_ktp where apply_lokers.idloker = ?'
+
+    await sequelize.query(query, {
+        type: sequelize.QueryTypes.SELECT,
+        replacements: [idloker]
+    }).then(data => {
         res.status(200).send(data)
+    }).catch(err => {
+        res.status(500).send({
+            message: 'Error getting data with id=' + idloker
+        })
+    })
+}
+
+exports.seleksiAdministrasi = (req, res) => {
+    const idapply = req.params.idapply
+    const nilai = req.body.nilai
+    if(nilai === 1) {
+        tahapanApply.update({idtahapan: 2, nilai: 1,  tgl_update: new Date()}, {
+            where: {idapply: idapply}
+        })
+        .then(num => {
+            if(num == 1) {
+                res.send({
+                    message: "Tahapan was updated successfully"
+                })
+            } else {
+                res.send({
+                    message: `Cant update tahapan with id=${idapply}`
+                })
+            }
+        })
+        .catch(err => {
+            res.status(500).send({
+                message: "Error while updating tahapan with id=" + idapply
+            })
+        })
+    } else if (nilai === 0) {
+        tahapanApply.update({idtahapan: 1, nilai: 0,  tgl_update: new Date()}, {
+            where: {idapply: idapply}
+        })
+        .then(num => {
+            if(num == 1) {
+                res.send({
+                    message: "Tahapan was updated successfully"
+                })
+            } else {
+                res.send({
+                    message: `Cant update tahapan with id=${idapply}`
+                })
+            }
+        })
+        .catch(err => {
+            res.status(500).send({
+                message: "Error while updating tahapan with id=" + idapply
+            })
+        })
+    }
+}
+
+exports.seleksiWawancara = (req, res) => {
+    const idapply = req.params.idapply
+
+    tahapanApply.update({idtahapan: 3, tgl_update: new Date()}, {
+        where: {idapply: idapply}
+    })
+    .then(num => {
+        if(num == 1) {
+            res.send({
+                message: "Tahapan was updated successfully"
+            })
+        } else {
+            res.send({
+                message: `Cant update tahapan with id=${idapply}`
+            })
+        }
     })
     .catch(err => {
         res.status(500).send({
-            message: 'Error getting data with idloker=' + idloker
+            message: "Error while updating tahapan with id=" + idapply
         })
     })
 }

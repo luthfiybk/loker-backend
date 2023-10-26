@@ -4,15 +4,21 @@ const Op = db.Sequelize.Op
 const sequelize = db.sequelize
 
 exports.getAll = (req, res) => {
+    const status = req.params.status
+    const condition = status ? { status: { [Op.like]: `%${status}%` } } : null
+
     Loker.findAll({
         attributes: ['idloker', 'idperusahaan', [sequelize.literal('loker.nama'), 'nama_pekerjaan'], 'tipe', 'deskripsi', 'nama_cp', 'no_telp_cp',[sequelize.col('master_status.nama'), 'status']],
         include: [{
             model: db.master_status,
             eager: false
         }],
+        where: {
+            status: condition
+        }
     })
     .then(data => {
-        res.send(data)
+        res.status(200).send(data)
     })
     .catch(err => {
         res.status(500).send({
@@ -33,7 +39,7 @@ exports.getOne = (req, res) => {
             }],
         })
     .then(data => {
-        res.send(data)
+        res.status(200).send(data)
     })
     .catch(err => {
         res.status(500).send({

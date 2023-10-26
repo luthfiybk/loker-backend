@@ -25,10 +25,10 @@ const Petugas = db.petugas
 const Status = db.master_status
 const Pencaker = db.pencaker
 
-db.sequelize.sync({ force: true }).then(() => {
-    console.log('Drop and Resync Database with { force: true }')
-    initial()
-})
+// db.sequelize.sync({ force: true }).then(() => {
+//     console.log('Drop and Resync Database with { force: true }')
+//     initial()
+// })
 
 function initial() {
     Tahapan.create({

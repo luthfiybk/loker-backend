@@ -11,12 +11,14 @@ module.exports = function(app) {
     //     )
     // })
 
+    //Get All Loker
     app.get(
         '/api/petugas/loker',
         [authJwt.verifyToken, authJwt.isPetugas],
         lokerController.getAll
     )
 
+    //
     app.get(
         '/api/petugas/loker/:idloker',
         [authJwt.verifyToken, authJwt.isPetugas],

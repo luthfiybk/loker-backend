@@ -32,16 +32,24 @@ db.loker = require('./loker.model')(sequelize, Sequelize)
 db.apply_loker = require('./apply_loker.model')(sequelize, Sequelize)
 db.master_status = require('./master_status.model')(sequelize, Sequelize)
 
-db.loker.hasMany(db.apply_loker, {
-    foreignKey: 'idloker',
+db.pencaker.hasMany(db.apply_loker, {
+    foreignKey: 'no_ktp'
 })
 
 db.apply_loker.belongsTo(db.pencaker,{
     foreignKey: 'no_ktp',
 })
 
+db.loker.hasMany(db.apply_loker, {
+    foreignKey: 'idloker',
+})
+
 db.apply_loker.belongsTo(db.loker, {
     foreignKey: 'idloker',
+})
+
+db.apply_loker.hasMany(db.tahapan_apply, {
+    foreignKey: 'idapply',
 })
 
 db.tahapan_apply.belongsTo(db.apply_loker, {
