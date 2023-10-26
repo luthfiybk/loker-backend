@@ -1,10 +1,10 @@
 module.exports = {
     HOST: 'localhost',
     USER: 'root',
-    PASSWORD: 'root',
+    PASSWORD: '',
     DB: 'loker',
     dialect: 'mysql',
-    port: 8889,
+    port: 3306,
     pool: {
         max: 5,
         min: 0,
