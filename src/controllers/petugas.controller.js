@@ -44,6 +44,20 @@ exports.createLoker = (req, res) => {
     })
 }
 
+exports.dashboard = async (req, res) => {
+    const query = `select 'total_loker_aktif' as kolom ,count(*) as total from lokers where status = 1 union all select 'total_loker_proses' as kolom,count(*) as total from lokers where status = 2 union all select 'total_loker_ditutup' as kolom ,count(*) as total from lokers where status = 3 union all select 'total_laki_laki' as kolom ,count(*) as total from pencakers where jenis_kelamin = 'Laki-laki' union all select 'total_perempuan' as kolom ,count(*) as total from pencakers where jenis_kelamin = 'Perempuan' union all select 'total_pencaker' as kolom ,count(*) as total from pencakers union all select 'total_loker' as kolom ,count(*) as total from lokers`
+
+    await sequelize.query(query, {
+        type: sequelize.QueryTypes.SELECT,
+        }).then(data => {
+            res.status(200).send(data)
+        }).catch(err => {
+            res.status(500).send({
+                message: 'Error getting data'
+        })
+    })
+}
+
 exports.editLoker = (req, res) => {
     const idloker = req.params.idloker
 
@@ -95,7 +109,7 @@ exports.deleteLoker = (req, res) => {
 exports.getPencakerFromLoker = async (req, res) => {
     const idloker = req.params.idloker
 
-    const query = 'select apply_lokers.idapply, pencakers.nama as nama_pekerjaan, apply_lokers.tgl_apply as tanggal_apply, tahapans.nama as tahapan from tahapan_applies left join tahapans on tahapan_applies.idtahapan = tahapans.idtahapan left join apply_lokers on apply_lokers.idapply = tahapan_applies.idapply left join pencakers on apply_lokers.no_ktp = pencakers.no_ktp where apply_lokers.idloker = ?'
+    const query = 'select lokers.nama as nama_pekerjaan, lokers.idperusahaan as id_perusahaan,apply_lokers.idapply, pencakers.nama as nama_pencaker, apply_lokers.tgl_apply as tanggal_apply, tahapans.nama as tahapan from tahapan_applies left join tahapans on tahapan_applies.idtahapan = tahapans.idtahapan left join apply_lokers on apply_lokers.idapply = tahapan_applies.idapply left join pencakers on apply_lokers.no_ktp = pencakers.no_ktp left join lokers on apply_lokers.idloker = lokers.idloker where apply_lokers.idloker = ?'
 
     await sequelize.query(query, {
         type: sequelize.QueryTypes.SELECT,

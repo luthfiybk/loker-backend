@@ -21,26 +21,22 @@ exports.getAll = (req, res) => {
     })
 }
 
-exports.getAllByFilter =  (req, res) => {
-    const { filter } = req.query
-    const paramQuerySQL = {}
+exports.getAllByFilter = async (req, res) => {
+    const filter = req.params.filter
 
-    if(filter !== '' && filter !== 'undefined'){
-        const query = filter.status.split(',').map((item) => ({
-            [Op.eq]: item
-        }))
+    const query = 'select lokers.idloker, lokers.idperusahaan, lokers.nama as nama_pekerjaan, lokers.tipe, lokers.deskripsi, lokers.nama_cp, lokers.no_telp_cp, master_statuses.nama as status from lokers inner join master_statuses on lokers.status = master_statuses.idstatus where status = ?'
 
-        paramQuerySQL.where = {
-            status: { [Op.or]: query }
-        }
-    }
-
-    Loker.findAll(paramQuerySQL)
+    await sequelize.query(query, {
+        type: sequelize.QueryTypes.SELECT,
+        replacements: [filter]
+    })
     .then(data => {
         res.status(200).send(data)
     })
     .catch(err => {
-        res.status(500).send({message: 'An error occured'})
+        res.status(500).send({
+            message: 'An error occurred while getting data'
+        })
     })
 }
 

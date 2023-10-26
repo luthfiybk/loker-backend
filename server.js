@@ -5,7 +5,11 @@ const bcrypt = require('bcryptjs')
 const bodyParser = require('body-parser')
 const app = express()
 
-app.use(cors())
+const corsOptions = {
+    origin: 'http://localhost:8000'
+}
+
+app.use(cors(corsOptions))
 app.use(bodyParser.json())
 app.use(express.urlencoded({ extended: true }))
 

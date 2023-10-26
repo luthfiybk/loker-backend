@@ -11,6 +11,13 @@ module.exports = function(app) {
     //     )
     // })
 
+
+    //Get Dashboard
+    app.get(
+        '/api/petugas/dashboard',
+        petugasController.dashboard
+    )
+
     //Get All Loker
     app.get(
         '/api/petugas/loker',
@@ -20,7 +27,7 @@ module.exports = function(app) {
 
     //Get All By Status
     app.get(
-        '/api/petugas/loker?filter[status]=:status',
+        '/api/petugas/loker/status/:filter',
         [authJwt.verifyToken, authJwt.isPetugas],
         lokerController.getAllByFilter
     )
