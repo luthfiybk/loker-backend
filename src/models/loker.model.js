@@ -38,6 +38,10 @@ module.exports = (sequelize, Sequelize) => {
         nama_cp: {
             type: DataTypes.STRING,
         },
+        email_cp: {
+            type: DataTypes.STRING,
+            unique: true
+        },
         no_telp_cp: {
             type: DataTypes.STRING,
         },

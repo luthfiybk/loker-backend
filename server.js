@@ -6,7 +6,8 @@ const bodyParser = require('body-parser')
 const app = express()
 
 const corsOptions = {
-    origin: 'http://localhost:8000'
+    origin: 'http://localhost:8000',
+    httpOnly: true,
 }
 
 app.use(cors(corsOptions))
@@ -36,6 +37,11 @@ const Pencaker = db.pencaker
 
 function initial() {
     Tahapan.create({
+        idtahapan: 0,
+        nama: 'Ditolak'
+    })
+
+    Tahapan.create({
         idtahapan: 1,
         nama: 'Seleksi Administrasi'
     })
@@ -43,6 +49,11 @@ function initial() {
     Tahapan.create({
         idtahapan: 2,
         nama: 'Seleksi Wawancara'
+    })
+
+    Tahapan.create({
+        idtahapan: 3,
+        nama: 'Lolos Seleksi'
     })
 
     Petugas.create({
